@@ -1,0 +1,27 @@
+{
+  "name": "cordova-umi",
+  "private": true,
+  "author": "caiyansong <caiyansong163@163.com>",
+  "scripts": {
+    "postinstall": "umi setup",
+    "setup": "umi setup",
+    "dev-android": "node build-util.js --serve --androidDevice",
+    "start": "node build-util.js --serve",
+    "build": "node build-util.js",
+    "dev-build": "umi build",
+    "dev-start": "umi dev"
+  },
+  "dependencies": {
+    "antd-mobile": "^5.25.1",
+    "postcss-px-to-viewport": "^1.1.1",
+    "umi": "^4.0.30"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "fs-extra": "^10.1.0",
+    "iconv-lite": "^0.6.3",
+    "inquirer": "^8.2.0",
+    "typescript": "^4.1.2"
+  }
+}
