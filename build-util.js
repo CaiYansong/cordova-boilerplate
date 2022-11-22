@@ -7,6 +7,8 @@ const iconv = require("iconv-lite");
 
 const isServe = process.argv.includes("--serve");
 
+const curPlatform = process.platform.toLowerCase();
+
 let url = "/";
 let mode = isServe ? "SERVE" : "BUILD";
 
@@ -44,16 +46,27 @@ let mode = isServe ? "SERVE" : "BUILD";
 
         // 获取无线局域网 IPv4 地址
         // TODO: 确认是否必须
-        let ipRes = execSync(`ipconfig`);
-        ipRes = iconv.decode(ipRes, "gbk");
-        ipRes = ipRes.replace(
-          /[\s\S\n\r]+无线局域网适配器 WLAN:([\s\S\n\r]+)/,
-          "$1"
-        );
-        const localWanMatch = ipRes.match(/IPv4 地址.+: +([\d.:]+)/);
-        if (localWanMatch && localWanMatch.length > 1) {
-          const port = lanHost.replace(/http:\/\/[\d.]+([\d:]+)/, "$1");
-          lanHost = `http://${localWanMatch[1]}${port}`;
+        if (curPlatform === "win32") {
+          let ipRes = execSync(`ipconfig`);
+          ipRes = iconv.decode(ipRes, "gbk");
+          ipRes = ipRes.replace(
+            /[\s\S\n\r]+无线局域网适配器 WLAN:([\s\S\n\r]+)/,
+            "$1"
+          );
+          const localWanMatch = ipRes.match(/IPv4 地址.+: +([\d.:]+)/);
+          if (localWanMatch && localWanMatch.length > 1) {
+            const port = lanHost.replace(/http:\/\/[\d.]+([\d:]+)/, "$1");
+            lanHost = `http://${localWanMatch[1]}${port}`;
+          }
+        } else if (curPlatform === "darwin") {
+          let ipRes = execSync(`ifconfig | grep 'inet'`);
+          ipRes = ipRes.toString();
+          ipRes = ipRes.replace(/[\s\S\n\r]+inet 127.0.0.1([\s\S\n\r]+)/, "$1");
+          const localWanMatch = ipRes.match(/inet +([\d.:]+)/);
+          if (localWanMatch && localWanMatch.length > 1) {
+            const port = lanHost.replace(/http:\/\/[\d.]+([\d:]+)/, "$1");
+            lanHost = `http://${localWanMatch[1]}${port}`;
+          }
         }
 
         url = lanHost;
