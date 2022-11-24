@@ -141,7 +141,7 @@ async function makeChoice() {
   };
 }
 
-function cleanUp() {
+function cleanUp(platform) {
   if (curPlatform === "darwin" && platform === "ios") {
     // cordova clean 的 bug，ios 下的 build 需要自己删除
     execSync("rm -rf build/", {
@@ -200,9 +200,9 @@ function copyPlatformsHtml(platform) {
 }
 
 function buildApp(opts) {
-  cleanUp();
-
   const { platform, isServe, lanHost, isDevice } = opts;
+  
+  cleanUp(platform);
 
   let cmd = `cordova run ${platform}`;
   if (isServe) {
