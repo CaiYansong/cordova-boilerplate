@@ -5,21 +5,29 @@ const inquirer = require("inquirer");
 const fs = require("fs-extra");
 const iconv = require("iconv-lite");
 
-const isServe = process.argv.includes("--serve");
-
 const curPlatform = process.platform.toLowerCase();
+
+console.log("curPlatform", curPlatform);
+
+const isServe = process.argv.includes("--serve");
 
 let url = "/";
 let mode = isServe ? "SERVE" : "BUILD";
+
+const ip = getLanIp();
 
 (async () => {
   const { platform, isDevice } = await makeChoice();
 
   if (isServe) {
+    // 清除 umi 缓存
+    deleteFile("./node_modules/.cache/");
+    // 处理 umi 相关配置
+    handleUmirc({ ip });
+
     copyPlatformsCordovaJs(platform);
     copyPlatformsHtml(platform);
 
-    // execSync(`npm run dev-build -- --mode=${platform}`, { stdio: "inherit" });
     const serve = exec(`npm run dev-start -- --mode=${platform}`);
     serve.stdout.pipe(process.stdout);
     let firstTime = true;
@@ -31,12 +39,14 @@ let mode = isServe ? "SERVE" : "BUILD";
       }
 
       const dataStr = data.toString().trim();
-      const localMatch = dataStr.match(/Local:[\s]+(http:\/\/localhost:[\d]+)/);
+      const localMatch = dataStr.match(
+        /Local:[\s]+(https?:\/\/localhost:[\d]+)/
+      );
       if (localMatch && localMatch.length > 1) {
         localHost = localMatch[1];
       }
 
-      const lanMatch = dataStr.match(/Network:[\s]+(http:\/\/[\d.:]+)/);
+      const lanMatch = dataStr.match(/Network:[\s]+(https?:\/\/[\d.:]+)/);
       if (lanMatch && lanMatch.length > 1) {
         lanHost = lanMatch[1];
       }
@@ -44,33 +54,9 @@ let mode = isServe ? "SERVE" : "BUILD";
       if (localHost && lanHost) {
         firstTime = false;
 
-        // 获取无线局域网 IPv4 地址
-        // TODO: 确认是否必须
-        if (curPlatform === "win32") {
-          let ipRes = execSync(`ipconfig`);
-          ipRes = iconv.decode(ipRes, "gbk");
-          ipRes = ipRes.replace(
-            /[\s\S\n\r]+无线局域网适配器 WLAN:([\s\S\n\r]+)/,
-            "$1"
-          );
-          const localWanMatch = ipRes.match(/IPv4 地址.+: +([\d.:]+)/);
-          if (localWanMatch && localWanMatch.length > 1) {
-            const port = lanHost.replace(/http:\/\/[\d.]+([\d:]+)/, "$1");
-            lanHost = `http://${localWanMatch[1]}${port}`;
-          }
-        } else if (curPlatform === "darwin") {
-          let ipRes = execSync(`ifconfig | grep 'inet'`);
-          ipRes = ipRes.toString();
-          ipRes = ipRes.replace(/[\s\S\n\r]+inet 127.0.0.1([\s\S\n\r]+)/, "$1");
-          const localWanMatch = ipRes.match(/inet +([\d.:]+)/);
-          if (localWanMatch && localWanMatch.length > 1) {
-            const port = lanHost.replace(/http:\/\/[\d.]+([\d:]+)/, "$1");
-            lanHost = `http://${localWanMatch[1]}${port}`;
-          }
-        }
-
-        url = lanHost;
-        console.log("lanHost", lanHost);
+        const protocol = lanHost.replace(/(https?:\/\/)[\d.]+[\d:]+/, "$1");
+        const port = lanHost.replace(/https?:\/\/[\d.]+([\d:]+)/, "$1");
+        url = `${protocol}${ip}${port}`;
 
         handleXML(mode, url);
 
@@ -92,6 +78,15 @@ let mode = isServe ? "SERVE" : "BUILD";
       console.error("Error: ", err);
     });
   } else {
+    // 生成 index.html
+    fs.writeFileSync(
+      "./public/index.html",
+      fs.readFileSync("./public/index-tpl.html", "utf-8")
+    );
+    // TODO: 优化
+    // 恢复 umi 相关配置
+    handleUmirc(false);
+
     handleXML(mode, url);
     execSync("npm run dev-build", { stdio: "inherit" });
     buildApp({
@@ -147,11 +142,13 @@ async function makeChoice() {
 }
 
 function cleanUp() {
-  // cordova clean 的 bug，ios 下的 build 需要自己删除
-  // execSync('rm -rf build/', {
-  //   cwd: './cordova/platforms/ios',
-  //   stdio: 'inherit',
-  // });
+  if (curPlatform === "darwin") {
+    // cordova clean 的 bug，ios 下的 build 需要自己删除
+    execSync("rm -rf build/", {
+      cwd: "./cordova/platforms/ios",
+      stdio: "inherit",
+    });
+  }
 
   execSync("cordova clean", {
     cwd: path.resolve(__dirname, "./cordova"),
@@ -169,8 +166,10 @@ function copyPlatformsCordovaJs(platform) {
 }
 
 function copyPlatformsHtml(platform) {
-  const srcFile = `./public/index.html`;
-  const dstFile = `./public/dev-build/index-${platform}.html`;
+  // 需手动暂存一份正确的 index.html -> index-tpl.html
+  const srcFile = `./public/index-tpl.html`;
+  // 处理相关内容
+  const dstFile = `./public/index.html`;
   const lines = fs.readFileSync(srcFile, "utf-8").split(/\r?\n/g);
 
   const regexImportComment = /\s+<!-- 引入 cordova.js -->/;
@@ -180,7 +179,7 @@ function copyPlatformsHtml(platform) {
   if (importCommentIndex >= 0) {
     lines[
       importCommentIndex + 1
-    ] = `    <script src="dev-build/${platform}/cordova.js"></script>`;
+    ] = `    <script src="/dev-build/${platform}/cordova.js"></script>`;
   }
 
   if (platform === "browser") {
@@ -345,4 +344,102 @@ function handleXML(mode, url = "/") {
 
   cordovaConfig = lines.reverse().join("\n");
   fs.writeFileSync(cordovaConfigPath, cordovaConfig);
+}
+
+/**
+ * 处理 umi 配置文件
+ */
+function handleUmirc(params) {
+  const filePath = "./.umirc.ts";
+  if (!params) {
+    let umircStr = fs.readFileSync(filePath, "utf-8");
+
+    // 添加 https host
+    // 解决 getLocation 本地开发 http 无法使用的问题
+    umircStr = umircStr.replace(
+      /https: { hosts: \["127.0.0.1", "localhost"(, "[^"]+")?\] },/,
+      `https: { hosts: ["127.0.0.1", "localhost"] },`
+    );
+
+    fs.writeFileSync(filePath, umircStr);
+    return;
+  }
+  const { ip } = params;
+  let umircStr = fs.readFileSync(filePath, "utf-8");
+
+  // 添加 https host
+  // 解决 getLocation 本地开发 http 无法使用的问题
+  umircStr = umircStr.replace(
+    /https: { hosts: \["127.0.0.1", "localhost"(, "[^"]+")?\] },/,
+    `https: { hosts: ["127.0.0.1", "localhost", "${ip}"] },`
+  );
+
+  fs.writeFileSync(filePath, umircStr);
+}
+
+/**
+ * 获取本机局域网 IP
+ * @returns
+ */
+function getLanIp() {
+  let ip = "";
+  // 获取无线局域网 IPv4 地址
+  if (curPlatform === "win32") {
+    let ipRes = execSync(`ipconfig`);
+    ipRes = iconv.decode(ipRes, "gbk");
+    ipRes = ipRes.replace(
+      /[\s\S\n\r]+无线局域网适配器 WLAN:([\s\S\n\r]+)/,
+      "$1"
+    );
+    const localWanMatch = ipRes.match(/IPv4 地址.+: +([\d.:]+)/);
+    if (localWanMatch && localWanMatch.length > 1) {
+      ip = localWanMatch[1];
+    }
+  } else if (curPlatform === "darwin") {
+    let ipRes = execSync(`ifconfig | grep 'inet'`);
+    ipRes = ipRes.toString();
+    ipRes = ipRes.replace(/[\s\S\n\r]+inet 127.0.0.1([\s\S\n\r]+)/, "$1");
+    const localWanMatch = ipRes.match(/inet +([\d.:]+)/);
+    if (localWanMatch && localWanMatch.length > 1) {
+      ip = localWanMatch[1];
+    }
+  }
+
+  return ip;
+}
+
+/**
+ * 删除文件或文件夹
+ * @param {string} target
+ */
+function deleteFile(target) {
+  const src = path.normalize(target);
+  if (curPlatform === "win32") {
+    // TODO: 优化
+    removeFolder(src);
+  } else if (curPlatform === "darwin") {
+    execSync(`rm -rf ${src}`);
+  }
+}
+
+function removeFolder(filePath) {
+  // 判断文件是否存在
+  if (fs.existsSync(filePath)) {
+    const files = fs.readdirSync(filePath);
+    files.forEach((file) => {
+      const nextFilePath = `${filePath}/${file}`;
+      // 获取文件状态
+      const states = fs.statSync(nextFilePath);
+      if (states.isDirectory()) {
+        // 递归删除
+        removeFolder(nextFilePath);
+      } else {
+        // 删除文件或符号链接
+        fs.unlinkSync(nextFilePath);
+      }
+    });
+    fs.rmdirSync(filePath);
+  } else {
+    console.log("文件不存在");
+  }
 }

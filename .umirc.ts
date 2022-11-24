@@ -7,6 +7,12 @@ import px2vw from "postcss-px-to-viewport";
 export default {
   npmClient: "npm",
   outputPath: "cordova/www",
+  headScripts: [{ src: "cordova.js" }],
+  alias: {
+    "@": "/src/",
+    "@service": "/services/",
+  },
+  https: { hosts: ["127.0.0.1", "localhost"] },
   extraPostCSSPlugins: [
     px2vw({
       // (Number) 设计稿的视口宽度，一般是 750

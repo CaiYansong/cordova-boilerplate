@@ -1,8 +1,13 @@
-import { Link, Outlet } from 'umi';
-import styles from './index.less';
+import { useEffect } from "react";
+import { Link, Outlet } from "umi";
+import styles from "./index.less";
+import { getAllPermissions } from "@service/permission";
 
 export default function Layout() {
-  console.log('Layout');
+  useEffect(() => {
+    getAllPermissions();
+  }, []);
+
   return (
     <div className={styles.navs}>
       <ul>
