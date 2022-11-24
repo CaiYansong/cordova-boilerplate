@@ -142,7 +142,7 @@ async function makeChoice() {
 }
 
 function cleanUp() {
-  if (curPlatform === "darwin") {
+  if (curPlatform === "darwin" && platform === "ios") {
     // cordova clean 的 bug，ios 下的 build 需要自己删除
     execSync("rm -rf build/", {
       cwd: "./cordova/platforms/ios",
