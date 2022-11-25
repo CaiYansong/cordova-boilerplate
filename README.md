@@ -2,6 +2,11 @@
 
 Cordova + UMI + React + Ant Design Mobile
 
+
+## 注意事项
+- 默认 https 访问关闭。开启后使用 https 访问，需要配置安全证书。
+  - 开启可在 .umirc.ts 中取消注释 https: {...}
+
 ## 命令
 
 ### 安装相关资源

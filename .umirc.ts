@@ -12,7 +12,8 @@ export default {
     "@": "/src/",
     "@service": "/services/",
   },
-  https: { hosts: ["127.0.0.1", "localhost"] },
+  // 按需添加，开启后使用 https 访问，需要配置安全证书
+  // https: { hosts: ["127.0.0.1", "localhost"] },
   extraPostCSSPlugins: [
     px2vw({
       // (Number) 设计稿的视口宽度，一般是 750
