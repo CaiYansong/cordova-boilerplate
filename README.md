@@ -2,6 +2,7 @@
 
 Cordova + UMI + React + Ant Design Mobile
 
+- 环境配置文档：https://www.yuque.com/caiyansong/web/kvig17ztpscgfu3o
 
 ## 注意事项
 - 默认 https 访问关闭。开启后使用 https 访问，需要配置安全证书。
