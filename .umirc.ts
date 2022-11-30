@@ -18,7 +18,7 @@ export default {
       component: "@/layouts/baseLayout",
       routes: [
         { path: "/", redirect: "/home" },
-        { path: "/home", component: "index" },
+        { path: "/home", component: "home" },
         { path: "/todo", component: "todo" },
         { path: "/message", component: "message" },
         { path: "/mine", component: "mine" },
