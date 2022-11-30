@@ -15,7 +15,7 @@ export default {
   routes: [
     {
       path: "/",
-      component: "@/layouts/footerBar",
+      component: "@/layouts/baseLayout",
       routes: [
         { path: "/", redirect: "/home" },
         { path: "/home", component: "index" },
@@ -27,7 +27,7 @@ export default {
     },
     {
       path: "/",
-      component: "@/layouts/base",
+      component: "@/layouts/emptyLayout",
       routes: [
         {
           path: "/login",
@@ -38,7 +38,7 @@ export default {
     },
   ],
   // 按需添加，开启后使用 https 访问，需要配置安全证书
-  // https: { hosts: ["127.0.0.1", "localhost"] },
+  // https: { hosts: ["127.0.0.1", "localhost", "192.168.0.39"] },
   extraPostCSSPlugins: [
     px2vw({
       // (Number) 设计稿的视口宽度，一般是 750
