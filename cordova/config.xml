@@ -8,8 +8,8 @@
   <description>
     WebAPP
   </description>
-  <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
-    Apache Cordova Team
+  <author email="caiyansong163@163.com">
+      CaiYansong
   </author>
   <!-- this hook will point your config.xml to the DevServer on Serve -->
   <!-- <hook type="after_prepare" src="../build-hook.js" /> -->
