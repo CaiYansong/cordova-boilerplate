@@ -8,6 +8,7 @@
 /dist
 
 .build.json
+/public/index.html
 /public/dev-build/
 /cordova/www/*
 !/cordova/www/.gitkeep
