@@ -44,7 +44,7 @@ export default function FooterBarLayout() {
   }, []);
 
   const [activeKey, setActiveKey] = useState(
-    history.location.pathname.replace(/^\//, "")
+    history.location.pathname.replace(/^\//, "") || "home"
   );
 
   const setRouteActive = (value) => {
