@@ -1,6 +1,6 @@
 import { Outlet, history } from "umi";
 import { useState, useEffect } from "react";
-import { SafeArea, TabBar } from "antd-mobile";
+import { TabBar } from "antd-mobile";
 import {
   AppOutline,
   MessageOutline,
@@ -27,7 +27,7 @@ const tabs = [
   {
     key: "message",
     title: "消息",
-    icon: (active: boolean) => (active ? <MessageFill /> : <MessageOutline />),
+    icon: (active) => (active ? <MessageFill /> : <MessageOutline />),
   },
   {
     key: "mine",
@@ -36,24 +36,36 @@ const tabs = [
   },
 ];
 
-export default function Layout() {
+export default function FooterBarLayout() {
   console.log("Layout");
 
   useEffect(() => {
-    // getAllPermissions();
+    getAllPermissions();
   }, []);
 
-  const [activeKey, setActiveKey] = useState("todo");
+  const [activeKey, setActiveKey] = useState(
+    history.location.pathname.replace(/^\//, "")
+  );
 
-  const setRouteActive = (value: string) => {
+  const setRouteActive = (value) => {
+    setActiveKey(value);
     history.push(value);
   };
 
   return (
-    <div>
-      <SafeArea position="top" />
-      <Outlet />
-      <SafeArea position="bottom" />
+    <div className={styles.layoutWarp}>
+      <div className={styles.bodyWrap}>
+        <Outlet />
+      </div>
+      <TabBar
+        activeKey={activeKey}
+        className={styles.footerBar}
+        onChange={(value) => setRouteActive(value)}
+      >
+        {tabs.map((item) => (
+          <TabBar.Item key={item.key} icon={item.icon} />
+        ))}
+      </TabBar>
     </div>
   );
 }

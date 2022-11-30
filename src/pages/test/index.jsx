@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "antd-mobile";
 
-const HomePage = () => {
+const TestPage = () => {
   const [msg, setMsg] = useState("");
 
   const [img, setImg] = useState("");
@@ -72,7 +72,7 @@ const HomePage = () => {
 
   return (
     <div>
-      <p>HomePage.</p>
+      <p>TestPage.</p>
       <Button>button</Button>
       <div>
         <Button onClick={onLocation}>onLocation</Button>
@@ -88,4 +88,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default TestPage;

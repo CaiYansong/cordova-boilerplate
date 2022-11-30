@@ -12,6 +12,31 @@ export default {
     "@": "/src/",
     "@service": "/services/",
   },
+  routes: [
+    {
+      path: "/",
+      component: "@/layouts/footerBar",
+      routes: [
+        { path: "/", redirect: "/home" },
+        { path: "/home", component: "index" },
+        { path: "/todo", component: "todo" },
+        { path: "/message", component: "message" },
+        { path: "/mine", component: "mine" },
+        { path: "/test", component: "test" },
+      ],
+    },
+    {
+      path: "/",
+      component: "@/layouts/base",
+      routes: [
+        {
+          path: "/login",
+          component: "login",
+        },
+        { path: "/404", component: "404" },
+      ],
+    },
+  ],
   // 按需添加，开启后使用 https 访问，需要配置安全证书
   // https: { hosts: ["127.0.0.1", "localhost"] },
   extraPostCSSPlugins: [
