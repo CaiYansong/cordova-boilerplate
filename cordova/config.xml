@@ -1,41 +1,50 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="test.device.manage" version="2.2.1"
-    xmlns="http://www.w3.org/ns/widgets"
-    xmlns:cdv="http://cordova.apache.org/ns/1.0"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <name>WebAPP</name>
-    <description>
-        WebAPP
-    </description>
-    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
-        Apache Cordova Team
-    </author>
-    <!-- this hook will point your config.xml to the DevServer on Serve -->
-    <!-- <hook type="after_prepare" src="../build-hook.js" /> -->
+<widget id="test.device.manage" version="1.0.0"
+  xmlns="http://www.w3.org/ns/widgets"
+  xmlns:cdv="http://cordova.apache.org/ns/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  >
+  <name>WebAPP</name>
+  <description>
+    WebAPP
+  </description>
+  <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+    Apache Cordova Team
+  </author>
+  <!-- this hook will point your config.xml to the DevServer on Serve -->
+  <!-- <hook type="after_prepare" src="../build-hook.js" /> -->
+  <!-- TODO: HTML 文件缓存问题，浏览器直接访问地址正常，Cordova 中访问异常。在非首页键盘刷新页面导致，返回首页刷新即可。 -->
     <content src="/" />
-    <!-- iOS 调试模式允许 Http -->
+  <!-- iOS 调试模式允许 Http -->
     <!-- <allow-navigation href="/" /> -->
-    <access origin="*" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
-    <platform name="android">
-        <!-- APP 图标 -->
-        <!-- <icon src="www/logo.png"></icon> -->
-        <allow-intent href="market:*" />
-        <!-- Android 调试模式允许 Http -->
-        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
-            <application android:usesCleartextTraffic="true" />
-        </edit-config>
-    </platform>
-    <platform name="ios">
-        <allow-intent href="itms:*" />
-        <allow-intent href="itms-apps:*" />
-        <!-- 阻止 iOS 上垂直方向的过度滑动 -->
-        <preference name="DisallowOverscroll" value="true" />
-    </platform>
-    <preference name="StatusBarOverlaysWebView" value="false" />
+  <access origin="*" />
+  <allow-intent href="http://*/*" />
+  <allow-intent href="https://*/*" />
+  <allow-intent href="tel:*" />
+  <allow-intent href="sms:*" />
+  <allow-intent href="mailto:*" />
+  <allow-intent href="geo:*" />
+
+  <platform name="android">
+    <!-- APP 图标 -->
+    <!-- <icon src="www/logo.png"></icon> -->
+    <allow-intent href="market:*" />
+    <!-- Android 调试模式允许 Http -->
+    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+      <application android:usesCleartextTraffic="true" />
+    </edit-config>
+    <config-file parent="/*" target="AndroidManifest.xml"> 
+    <!-- cordova-plugin-android-permissions 存在 bug，无法直接获取 camera 权限，所以需要此操作 -->
+      <uses-feature android:name="android.hardware.camera" />
+      <uses-feature android:name="android.hardware.camera.autofocus" />
+      <uses-permission android:name="android.permission.CAMERA" />
+    </config-file>
+  </platform>
+  <platform name="ios">
+    <allow-intent href="itms:*" />
+    <allow-intent href="itms-apps:*" />
+    <!-- 阻止 iOS 上垂直方向的过度滑动 -->
+    <preference name="DisallowOverscroll" value="true" />
+  </platform>
+  <preference name="StatusBarOverlaysWebView" value="false" />
 </widget>
