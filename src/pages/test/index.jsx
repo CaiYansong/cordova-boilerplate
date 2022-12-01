@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "antd-mobile";
 
+import Face from "./face";
+
 const TestPage = () => {
   const [msg, setMsg] = useState("");
 
@@ -27,6 +29,7 @@ const TestPage = () => {
         // quality: 50,
         // 结果类型
         destinationType: Camera.DestinationType.DATA_URL,
+        // sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
       }
     );
   }
@@ -84,6 +87,7 @@ const TestPage = () => {
       <div>{location}</div>
       <br />
       <div>{msg}</div>
+      <Face />
     </div>
   );
 };

@@ -1,7 +1,9 @@
-import yayJpg from '@/assets/yay.jpg';
+import { Link } from "umi";
+
+import yayJpg from "@/assets/yay.jpg";
 
 export default function HomePage() {
-  console.log('HomePage');
+  console.log("HomePage");
   return (
     <div>
       <h2>Yay! Welcome to umi!</h2>
@@ -10,6 +12,10 @@ export default function HomePage() {
       </p>
       <p>
         To get started, edit <code>pages/index.tsx</code> and save to reload.
+      </p>
+      <p>
+        12
+        <Link to="/test">Test</Link>
       </p>
     </div>
   );
