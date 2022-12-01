@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "antd-mobile": "^5.25.1",
-    "postcss-px-to-viewport": "^1.1.1",
+    "postcss-px-to-viewport-8-plugin": "^1.1.5",
     "umi": "^4.0.30"
   },
   "devDependencies": {

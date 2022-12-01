@@ -2,7 +2,7 @@
  * .umirc.ts
  */
 // @ts-ignore
-import px2vw from "postcss-px-to-viewport";
+import px2vw from "postcss-px-to-viewport-8-plugin";
 
 export default {
   npmClient: "npm",
