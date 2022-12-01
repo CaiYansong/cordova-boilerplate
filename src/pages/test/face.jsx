@@ -13,6 +13,7 @@ export default function Face() {
   const canvasRef = useRef();
   const videoRef = useRef();
 
+  const [modulesLoading, setModulesLoading] = useState(true);
   const [msg, setMsg] = useState("");
 
   // 开启摄像头获取视频
@@ -161,6 +162,8 @@ export default function Face() {
     // ageGenderNet 识别性别和年龄
     // mtcnn  多任务CNN算法，一开浏览器就卡死?
     // tinyYolov2 识别身体轮廓的算法
+    setModulesLoading(true);
+    log("模型加载中...");
     Promise.all([
       faceapi.nets.faceRecognitionNet.loadFromUri(basePath),
       faceapi.nets.faceLandmark68Net.loadFromUri(basePath),
@@ -172,6 +175,7 @@ export default function Face() {
     ]).then(() => {
       console.log("---------- 模型加载完毕 ----------");
       log("模型加载完毕");
+      setModulesLoading(false);
       // startVideo();
     });
   }
@@ -198,8 +202,12 @@ export default function Face() {
     <div>
       <p>{msg}</p>
       <div>
-        <Button onClick={onGetFace}>开始检测</Button>
-        <Button onClick={onCloseFace}>结束检测</Button>
+        <Button disabled={modulesLoading} onClick={onGetFace}>
+          开始检测
+        </Button>
+        <Button disabled={modulesLoading} onClick={onCloseFace}>
+          结束检测
+        </Button>
       </div>
       <video
         playsInline
