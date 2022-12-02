@@ -2,15 +2,16 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "antd-mobile";
 
 import FaceTool from "./face-utils";
+import UserMedia from "./video-utils";
 
 const SIZE = {
   width: 300,
   height: 300,
 };
 
-let media = null;
-
 let faceTool = null;
+
+const userMedia = new UserMedia({ video: SIZE });
 
 export default function Face() {
   const canvasRef = useRef();
@@ -22,59 +23,16 @@ export default function Face() {
 
   // 开启摄像头获取视频
   const startVideo = () => {
-    // 以下是此方法的兼容性写法，
-    if (navigator.mediaDevices === undefined) {
-      navigator.mediaDevices = {};
-    }
-    if (navigator?.mediaDevices?.getUserMedia === undefined) {
-      navigator.mediaDevices.getUserMedia = function (constraints) {
-        var getUserMedia =
-          navigator.getUserMedia ||
-          navigator.webkitGetUserMedia ||
-          navigator.mozGetUserMedia ||
-          navigator.msGetUserMedia ||
-          navigator.oGetUserMedia ||
-          window.MediaDevices;
-        if (!getUserMedia) {
-          console.error("not getUserMedia");
-          return Promise.reject(
-            new Error("getUserMedia is not implemented in this browser")
-          );
-        }
-        return new Promise(function (resolve, reject) {
-          getUserMedia.call(navigator, constraints, resolve, reject);
-        });
-      };
-    }
-
-    const videoConfig = { video: { ...SIZE } };
-    if (navigator.getUserMedia) {
-      log("navigator.getUserMedia");
-      navigator.getUserMedia(videoConfig, handleVideo, (err) =>
-        console.error(err)
-      );
-    } else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      log("navigator.mediaDevices.getUserMedia");
-      navigator.mediaDevices.getUserMedia(videoConfig).then(handleVideo);
-    }
-
-    function handleVideo(stream) {
+    userMedia.getUserMedia().then(function handleVideo(stream) {
       log("handleVideo");
-      media = stream;
       videoRef.current.srcObject = stream;
       videoRef.current.play();
-    }
+    });
   };
 
   // 关闭摄像头
   const closeVideo = () => {
-    if (media == null) {
-      return;
-    }
-    if (media.active == true) {
-      let track = media.getTracks()[0];
-      track.stop();
-    }
+    userMedia.closeUserMedia();
   };
 
   // 检测人脸
@@ -83,6 +41,7 @@ export default function Face() {
       console.log("faceLoading", faceLoading);
       return;
     }
+    console.log("checkVideo");
     setFaceLoading(true);
     faceTool.getFaceFromVideo().then(() => {
       setFaceLoading(false);
@@ -105,7 +64,6 @@ export default function Face() {
   }
 
   useEffect(() => {
-    // loadModel();
     faceTool = new FaceTool({
       videoEl: videoRef.current,
       canvasEl: canvasRef.current,
@@ -117,9 +75,11 @@ export default function Face() {
       setModulesLoading(false);
     });
     // 视频开始播放才进行检测
-    videoRef.current.addEventListener("playing", function () {
+    // 使用 onplaying 解决 addEventListener 本地开发多次触发的问题
+    videoRef.current.onplaying = function () {
+      console.log('onPlaying ');
       checkVideo();
-    });
+    };
   }, []);
 
   return (

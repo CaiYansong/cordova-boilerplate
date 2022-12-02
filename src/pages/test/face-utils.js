@@ -74,28 +74,7 @@ export class FaceTool {
   loadModules(_modules, _modulePath) {
     const { modules, modulePath } = this.modulesConf;
 
-    const modulesList = _modules ||
-      modules || [
-        "faceRecognitionNet",
-        "faceLandmark68Net",
-        "ssdMobilenetv1",
-        "tinyFaceDetector",
-        "faceLandmark68TinyNet",
-        "faceExpressionNet",
-        "mtcnn",
-      ];
-
-    return Promise.all(
-      modulesList
-        ?.filter((it) => it)
-        .map((module) =>
-          faceapi.nets[module].loadFromUri(
-            _modulePath || modulePath || "/models"
-          )
-        )
-    ).catch((err) => {
-      console.error("Error loadModules: ", err);
-    });
+    return loadModules(_modules || modules, _modulePath || modulePath);
   }
 
   /**
@@ -270,6 +249,52 @@ export class FaceTool {
     this.timer = null;
     this.detectLoading = false;
   }
+}
+
+/**
+ * 加载训练好的模型
+ * @param {Array} customizeModules 自定义加载模型 
+ * @param {string} modulePath 模型路径
+  // faceRecognitionNet 识别人脸
+  // faceLandmark68Net 识别脸部特征用于 mobilenet 算法
+  // ssdMobilenetv1 google 开源 AI 算法除库包含分类和线性回归
+  // tinyFaceDetector 比 Google 的 mobilenet 更轻量级，速度更快一点
+  // faceLandmark68TinyNet 识别脸部特征用于tiny算法
+  // faceExpressionNet 识别表情,开心，沮丧，普通
+  // ageGenderNet 识别性别和年龄
+  // mtcnn  多任务CNN算法，一开浏览器就卡死?
+  // tinyYolov2 识别身体轮廓的算法
+ * @returns 
+ */
+export function loadModules(customizeModules, modulePath = "/models") {
+  if (window._faceUtils?.modulesLoaded === true) {
+    return Promise.resolve(window._faceUtils.modulesRes);
+  }
+  const modules = customizeModules || [
+    "faceRecognitionNet",
+    "faceLandmark68Net",
+    "ssdMobilenetv1",
+    "tinyFaceDetector",
+    "faceLandmark68TinyNet",
+    "faceExpressionNet",
+    "mtcnn",
+  ];
+  return Promise.all(
+    modules
+      ?.filter((it) => it)
+      .map((module) => faceapi.nets[module].loadFromUri(modulePath))
+  )
+    .then((res) => {
+      if (!window._faceUtils) {
+        window._faceUtils = {};
+      }
+      window._faceUtils.modulesRes = res;
+      window._faceUtils.modulesLoaded = true;
+      return res;
+    })
+    .catch((err) => {
+      console.error("Error loadModules: ", err);
+    });
 }
 
 export default FaceTool;
