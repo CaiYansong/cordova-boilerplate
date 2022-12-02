@@ -358,8 +358,8 @@ function handleUmirc(params) {
     // 添加 https host
     // 解决 getLocation 本地开发 http 无法使用的问题
     umircStr = umircStr.replace(
-      /https: { hosts: \[("[^"]+",? ?)?\] },/,
-      `https: { hosts: [] },`
+      /https: { hosts: \["127.0.0.1", "localhost"(, "[^"]+")?\] },/,
+      `https: { hosts: ["127.0.0.1", "localhost"] },`
     );
 
     fs.writeFileSync(filePath, umircStr);
@@ -371,8 +371,8 @@ function handleUmirc(params) {
   // 添加 https host
   // 解决 getLocation 本地开发 http 无法使用的问题
   umircStr = umircStr.replace(
-    /https: { hosts: \[\] },/,
-    `https: { hosts: ["${ip}"] },`
+    /https: { hosts: \["127.0.0.1", "localhost"(, "[^"]+")?\] },/,
+    `https: { hosts: ["127.0.0.1", "localhost", "${ip}"] },`
   );
 
   fs.writeFileSync(filePath, umircStr);

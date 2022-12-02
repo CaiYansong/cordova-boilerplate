@@ -39,7 +39,7 @@ export default {
   ],
   // 按需添加，开启后使用 https 访问，需要配置安全证书
   // 本地开发可开启，用于解决局域网 IP 非 http 获取定位、摄像头 等无权限问题
-  // https: { hosts: [] },
+  // https: { hosts: ["127.0.0.1", "localhost"] },
   extraPostCSSPlugins: [
     px2vw({
       // (Number) 设计稿的视口宽度，一般是 750
