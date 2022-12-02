@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "antd-mobile";
 
-import { FaceTool } from "./face-utils";
+import FaceTool from "./face-utils";
 
 const SIZE = {
   width: 300,
@@ -22,7 +22,6 @@ export default function Face() {
 
   // 开启摄像头获取视频
   const startVideo = () => {
-    log("startVideo", navigator.getUserMedia, navigator.mediaDevices);
     // 以下是此方法的兼容性写法，
     if (navigator.mediaDevices === undefined) {
       navigator.mediaDevices = {};
@@ -64,10 +63,6 @@ export default function Face() {
       media = stream;
       videoRef.current.srcObject = stream;
       videoRef.current.play();
-      // 视频开始播放才进行检测
-      videoRef.current.addEventListener("playing", function () {
-        checkVideo();
-      });
     }
   };
 
@@ -91,6 +86,7 @@ export default function Face() {
     setFaceLoading(true);
     faceTool.getFaceFromVideo().then(() => {
       setFaceLoading(false);
+      closeVideo();
     });
   };
 
@@ -119,6 +115,10 @@ export default function Face() {
       console.log("---------- 模型加载完毕 ----------");
       log("模型加载完毕");
       setModulesLoading(false);
+    });
+    // 视频开始播放才进行检测
+    videoRef.current.addEventListener("playing", function () {
+      checkVideo();
     });
   }, []);
 
