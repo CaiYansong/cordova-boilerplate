@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "antd-mobile";
 
 import Face from "./face";
+import MediaCapture from "./media-capture";
 
 const TestPage = () => {
   const [msg, setMsg] = useState("");
@@ -88,6 +89,7 @@ const TestPage = () => {
       <br />
       <div>{msg}</div>
       <Face />
+      <MediaCapture />
     </div>
   );
 };
