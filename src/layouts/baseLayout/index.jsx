@@ -1,5 +1,5 @@
-import { Outlet, history } from "umi";
-import { useState, useEffect } from "react";
+import { history } from "umi";
+import { useState } from "react";
 import { TabBar } from "antd-mobile";
 import {
   AppOutline,
@@ -8,8 +8,6 @@ import {
   UnorderedListOutline,
   UserOutline,
 } from "antd-mobile-icons";
-
-import { getAllPermissions } from "@service/permission";
 
 import styles from "./index.less";
 
@@ -20,43 +18,25 @@ const tabs = [
     icon: <AppOutline />,
   },
   {
-    key: "todo",
-    title: "待办",
-    icon: <UnorderedListOutline />,
-  },
-  {
-    key: "message",
-    title: "消息",
-    icon: (active) => (active ? <MessageFill /> : <MessageOutline />),
-  },
-  {
     key: "mine",
     title: "我的",
     icon: <UserOutline />,
   },
 ];
 
-export default function FooterBarLayout() {
-  console.log("Layout");
-
-  useEffect(() => {
-    getAllPermissions();
-  }, []);
-
+export default function BaseLayout(props) {
   const [activeKey, setActiveKey] = useState(
-    history.location.pathname.replace(/^\//, "") || "home"
+    history.location.pathname.replace(/^\//, "") || "home",
   );
 
   const setRouteActive = (value) => {
     setActiveKey(value);
-    history.push(value);
+    history.push(`/${value}`);
   };
 
   return (
     <div className={styles.layoutWarp}>
-      <div className={styles.bodyWrap}>
-        <Outlet />
-      </div>
+      <div className={styles.bodyWrap}>{props.children}</div>
       <TabBar
         activeKey={activeKey}
         className={styles.footerBar}

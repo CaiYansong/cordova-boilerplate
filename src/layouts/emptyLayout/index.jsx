@@ -1,12 +1,5 @@
-import { Outlet } from "umi";
-
-const LoginLayout = () => {
-  console.log('LoginLayout');
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+const LoginLayout = (props) => {
+  return <>{props.children}</>;
 };
 
 export default LoginLayout;

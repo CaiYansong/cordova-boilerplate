@@ -1,18 +1,10 @@
-import { Outlet } from "umi";
-import { useEffect } from "react";
 import { SafeArea } from "antd-mobile";
 
-
-export default function Layout() {
-  console.log("Layout");
-
-  useEffect(() => {
-  }, []);
-
+export default function Layout(props: any) {
   return (
     <div>
       <SafeArea position="top" />
-      <Outlet />
+      {props.children}
       <SafeArea position="bottom" />
     </div>
   );

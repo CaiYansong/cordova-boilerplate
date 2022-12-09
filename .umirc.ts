@@ -1,19 +1,21 @@
-/**
- * .umirc.ts
- */
 // @ts-ignore
-import px2vw from "postcss-px-to-viewport-8-plugin";
+import path from "path";
+// @ts-ignore
+import { defineConfig } from "umi";
+// @ts-ignore
+import px2vw from "postcss-px-to-viewport";
 
-export default {
-  npmClient: "npm",
+export default defineConfig({
   outputPath: "cordova/www",
   headScripts: [{ src: "cordova.js" }],
   alias: {
     "@": "/src/",
     "@service": "/services/",
+    "@packages": path.resolve(__dirname, "packages"),
   },
   routes: [
     {
+      // 有 底部导航栏的布局
       path: "/",
       component: "@/layouts/baseLayout",
       routes: [
@@ -25,6 +27,7 @@ export default {
         { path: "/test", component: "test" },
       ],
     },
+    // 无 底部导航栏的布局
     {
       path: "/",
       component: "@/layouts/emptyLayout",
@@ -64,4 +67,4 @@ export default {
       selectorBlackList: [".ignore", ".hairlines"],
     }),
   ],
-};
+});

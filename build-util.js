@@ -83,6 +83,7 @@ const ip = getLanIp();
       "./public/index.html",
       fs.readFileSync("./public/index-tpl.html", "utf-8")
     );
+    // TODO: 优化
     // 恢复 umi 相关配置
     handleUmirc(false);
 
@@ -200,7 +201,7 @@ function copyPlatformsHtml(platform) {
 
 function buildApp(opts) {
   const { platform, isServe, lanHost, isDevice } = opts;
-
+  
   cleanUp(platform);
 
   let cmd = `cordova run ${platform}`;
@@ -346,13 +347,11 @@ function handleXML(mode, url = "/") {
 }
 
 /**
-  // TODO: 优化
  * 处理 umi 配置文件
  */
 function handleUmirc(params) {
   const filePath = "./.umirc.ts";
   if (!params) {
-    // 恢复 umi 相关配置
     let umircStr = fs.readFileSync(filePath, "utf-8");
 
     // 添加 https host
