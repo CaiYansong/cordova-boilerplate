@@ -19,6 +19,8 @@
 /src/.umi-test
 /.env.local
 
+
+/path
 .build.json
 /public/dev-build/
 /public/index.html
