@@ -17,6 +17,13 @@ Cordova + UMI + React + Ant Design Mobile
   - 确认是否存在名称为 www 的文件夹，不存在则手动新建名称为  www 的文件夹
 3. cordova 目录 添加 android 平台
   - cordova platform add android
+4. 按需安装插件
+  - cordova plugin add cordova-plugin-android-permissions
+  - cordova plugin add cordova-plugin-media-capture
+  - cordova plugin add cordova-plugin-geolocation
+
+#### https 证书配置（按需配置）
+- https://www.yuque.com/caiyansong/web/cuorx0cxchg8ysui
 
 ### 本地开发
 开发：根目录
