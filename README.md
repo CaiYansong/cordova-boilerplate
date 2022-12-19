@@ -6,7 +6,7 @@ Cordova + UMI + React + Ant Design Mobile
 
 ## 注意事项
 - 默认 https 访问关闭。开启后使用 https 访问，需要配置安全证书。
-  - 开启可在 .umirc.ts 中取消注释 https: {...}
+  - 开启可在 .umirc.ts 中取消注释 devServer.https: {...}
 
 ## 命令
 
@@ -15,9 +15,10 @@ Cordova + UMI + React + Ant Design Mobile
 3. cordova 目录 （确保名称为 www 的文件夹存在）
   - cd cordova
   - 确认是否存在名称为 www 的文件夹，不存在则手动新建名称为  www 的文件夹
-3. cordova 目录 添加 android 平台
+3. cordova 目录 添加平台
   - cordova platform add android
-4. 按需安装插件
+  - cordova platform add browser
+4. 安装插件
   - cordova plugin add cordova-plugin-android-permissions
   - cordova plugin add cordova-plugin-media-capture
   - cordova plugin add cordova-plugin-geolocation
@@ -42,6 +43,10 @@ Cordova + UMI + React + Ant Design Mobile
 - 注意：手机需要用数据线连接电脑，才能自动安装。
 - 安装包位置：cordova-umi\cordova\platforms\android\app\build\outputs\apk
 
+
+### 开发注意事项
+- 接口统一使用 packages/data-model 进行请求
+- 行内样式单位使用 vw\vh （插件不支持行内样式单位转换）
 
 ## 问题
 
