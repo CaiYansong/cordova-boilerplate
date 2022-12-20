@@ -270,6 +270,12 @@ export function loadModules(customizeModules, modulePath = "/models") {
   if (window._faceUtils?.modulesLoaded === true) {
     return Promise.resolve(window._faceUtils.modulesRes);
   }
+  if (
+    Object.prototype.toString.call(window._faceUtils?.modulesLoaded) ===
+    "[object Promise]"
+  ) {
+    return window._faceUtils?.modulesLoaded;
+  }
   const modules = customizeModules || [
     "faceRecognitionNet",
     "faceLandmark68Net",
@@ -279,7 +285,7 @@ export function loadModules(customizeModules, modulePath = "/models") {
     "faceExpressionNet",
     "mtcnn",
   ];
-  return Promise.all(
+  const promise = Promise.all(
     modules
       ?.filter((it) => it)
       .map((module) => faceapi.nets[module].loadFromUri(modulePath))
@@ -290,11 +296,17 @@ export function loadModules(customizeModules, modulePath = "/models") {
       }
       window._faceUtils.modulesRes = res;
       window._faceUtils.modulesLoaded = true;
-      return res;
+      return Promise.resolve(res);
     })
     .catch((err) => {
       console.error("Error loadModules: ", err);
     });
+
+  if (!window._faceUtils) {
+    window._faceUtils = {};
+  }
+  window._faceUtils.modulesLoaded = promise;
+  return promise;
 }
 
 export default FaceTool;
