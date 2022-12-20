@@ -15,6 +15,11 @@ export default defineConfig({
   },
   routes: [
     {
+      path: "/login",
+      component: "login",
+    },
+    { path: "/404", component: "404" },
+    {
       // 有 底部导航栏的布局
       path: "/",
       component: "@/layouts/baseLayout",
@@ -25,18 +30,6 @@ export default defineConfig({
         { path: "/message", component: "message" },
         { path: "/mine", component: "mine" },
         { path: "/test", component: "test" },
-      ],
-    },
-    // 无 底部导航栏的布局
-    {
-      path: "/",
-      component: "@/layouts/emptyLayout",
-      routes: [
-        {
-          path: "/login",
-          component: "login",
-        },
-        { path: "/404", component: "404" },
       ],
     },
   ],
