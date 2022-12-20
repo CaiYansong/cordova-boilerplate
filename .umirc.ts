@@ -69,9 +69,9 @@ export default defineConfig({
     // 证书配置方式: https://www.yuque.com/caiyansong/web/cuorx0cxchg8ysui
     // 按需添加，开启后使用 https 访问，需要配置安全证书
     // 本地开发可开启，用于解决局域网 IP 非 http 获取定位、摄像头 等无权限问题
-    https: {
-      key: path.resolve(__dirname, "./path/private.key"),
-      cert: "./path/private.pem",
-    },
+    // https: {
+    //   key: path.resolve(__dirname, "./path/private.key"),
+    //   cert: "./path/private.pem",
+    // },
   },
 });

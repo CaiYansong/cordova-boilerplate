@@ -31,6 +31,7 @@
       <application android:usesCleartextTraffic="true" />
     </edit-config>
     <config-file parent="/*" target="AndroidManifest.xml">
+      <uses-permission android:name="android.permission.INTERNET" />
       <!-- cordova-plugin-android-permissions 存在 bug，无法直接获取 camera 权限，所以需要此操作 -->
       <uses-feature android:name="android.hardware.camera" />
       <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -43,5 +44,6 @@
     <!-- 阻止 iOS 上垂直方向的过度滑动 -->
     <preference name="DisallowOverscroll" value="true" />
   </platform>
-  <preference name="StatusBarOverlaysWebView" value="false" />
+  <!-- 解决 https 请求 404 问题 -->
+  <plugin name="cordova-plugin-whitelist" version="1" />
 </widget>

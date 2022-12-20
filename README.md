@@ -5,6 +5,8 @@ Cordova + UMI + React + Ant Design Mobile
 - 环境配置文档：https://www.yuque.com/caiyansong/web/kvig17ztpscgfu3o
 
 ## 注意事项
+- cordova@10.x
+  - android@9.1.0
 - 默认 https 访问关闭。开启后使用 https 访问，需要配置安全证书。
   - 开启可在 .umirc.ts 中取消注释 devServer.https: {...}
 
@@ -19,6 +21,7 @@ Cordova + UMI + React + Ant Design Mobile
   - cordova platform add android
   - cordova platform add browser
 4. 安装插件
+  - cordova plugin add cordova-plugin-whitelist
   - cordova plugin add cordova-plugin-android-permissions
   - cordova plugin add cordova-plugin-media-capture
   - cordova plugin add cordova-plugin-geolocation

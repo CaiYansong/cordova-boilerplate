@@ -40,7 +40,7 @@ const ip = getLanIp();
 
       const dataStr = data.toString().trim();
       const localMatch = dataStr.match(
-        /Local:[\s]+(https?:\/\/localhost:[\d]+)/
+        /Local:[\s]+(https?:\/\/localhost:[\d]+)/,
       );
       if (localMatch && localMatch.length > 1) {
         localHost = localMatch[1];
@@ -81,7 +81,7 @@ const ip = getLanIp();
     // 生成 index.html
     fs.writeFileSync(
       "./public/index.html",
-      fs.readFileSync("./public/index-tpl.html", "utf-8")
+      fs.readFileSync("./public/index-tpl.html", "utf-8"),
     );
     // TODO: 优化
     // 恢复 umi 相关配置
@@ -174,7 +174,7 @@ function copyPlatformsHtml(platform) {
 
   const regexImportComment = /\s+<!-- 引入 cordova.js -->/;
   const importCommentIndex = lines.findIndex((line) =>
-    line.match(regexImportComment)
+    line.match(regexImportComment),
   );
   if (importCommentIndex >= 0) {
     lines[
@@ -183,10 +183,9 @@ function copyPlatformsHtml(platform) {
   }
 
   if (platform === "browser") {
-    const regexDisableComment =
-      /\s+<!-- 调试模式下 platform===browser 时禁用网页端 CSP -->/;
+    const regexDisableComment = /\s+<!-- 调试模式下 platform===browser 时禁用网页端 CSP -->/;
     const disableCommentIndex = lines.findIndex((line) =>
-      line.match(regexDisableComment)
+      line.match(regexDisableComment),
     );
     if (disableCommentIndex >= 0 && platform === "browser") {
       const cspLine = lines[disableCommentIndex + 1];
@@ -201,7 +200,7 @@ function copyPlatformsHtml(platform) {
 
 function buildApp(opts) {
   const { platform, isServe, lanHost, isDevice } = opts;
-  
+
   cleanUp(platform);
 
   let cmd = `cordova run ${platform}`;
@@ -220,7 +219,7 @@ function buildApp(opts) {
       } else {
         console.log(stdout);
       }
-    }
+    },
   );
   build.stdout.pipe(process.stdout);
 }
@@ -358,7 +357,7 @@ function handleUmirc(params) {
     // 解决 getLocation 本地开发 http 无法使用的问题
     umircStr = umircStr.replace(
       /https: { hosts: \["127.0.0.1", "localhost"(, "[^"]+")?\] },/,
-      `https: { hosts: ["127.0.0.1", "localhost"] },`
+      `https: { hosts: ["127.0.0.1", "localhost"] },`,
     );
 
     fs.writeFileSync(filePath, umircStr);
@@ -371,7 +370,7 @@ function handleUmirc(params) {
   // 解决 getLocation 本地开发 http 无法使用的问题
   umircStr = umircStr.replace(
     /https: { hosts: \["127.0.0.1", "localhost"(, "[^"]+")?\] },/,
-    `https: { hosts: ["127.0.0.1", "localhost", "${ip}"] },`
+    `https: { hosts: ["127.0.0.1", "localhost", "${ip}"] },`,
   );
 
   fs.writeFileSync(filePath, umircStr);
@@ -389,7 +388,7 @@ function getLanIp() {
     ipRes = iconv.decode(ipRes, "gbk");
     ipRes = ipRes.replace(
       /[\s\S\n\r]+无线局域网适配器 WLAN:([\s\S\n\r]+)/,
-      "$1"
+      "$1",
     );
     const localWanMatch = ipRes.match(/IPv4 地址.+: +([\d.:]+)/);
     if (localWanMatch && localWanMatch.length > 1) {
