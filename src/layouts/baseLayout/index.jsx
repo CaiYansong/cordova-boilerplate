@@ -1,26 +1,22 @@
 import { history } from "umi";
 import { useState } from "react";
 import { TabBar } from "antd-mobile";
-import {
-  AppOutline,
-  MessageOutline,
-  MessageFill,
-  UnorderedListOutline,
-  UserOutline,
-} from "antd-mobile-icons";
+import { AppOutline, UserOutline } from "antd-mobile-icons";
 
-import styles from "./index.less";
+import "./index.less";
+
+const iconSize = 16;
 
 const tabs = [
   {
     key: "home",
     title: "首页",
-    icon: <AppOutline />,
+    icon: <AppOutline fontSize={iconSize} />,
   },
   {
     key: "mine",
     title: "我的",
-    icon: <UserOutline />,
+    icon: <UserOutline fontSize={iconSize} />,
   },
 ];
 
@@ -35,15 +31,15 @@ export default function BaseLayout(props) {
   };
 
   return (
-    <div className={styles.layoutWarp}>
-      <div className={styles.bodyWrap}>{props.children}</div>
+    <div className="base-layout">
+      <div className="body-wrap">{props.children}</div>
       <TabBar
+        className="footer-tab-bar"
         activeKey={activeKey}
-        className={styles.footerBar}
         onChange={(value) => setRouteActive(value)}
       >
         {tabs.map((item) => (
-          <TabBar.Item key={item.key} icon={item.icon} />
+          <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
         ))}
       </TabBar>
     </div>
