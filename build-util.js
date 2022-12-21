@@ -11,7 +11,7 @@ console.log("curPlatform", curPlatform);
 
 const isServe = process.argv.includes("--serve");
 
-let url = "/";
+let url = "index.html";
 let mode = isServe ? "SERVE" : "BUILD";
 
 const ip = getLanIp();

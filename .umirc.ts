@@ -8,6 +8,10 @@ import px2vw from "postcss-px-to-viewport";
 export default defineConfig({
   outputPath: "cordova/www",
   headScripts: [{ src: "cordova.js" }],
+  publicPath: "./",
+  history: {
+    type: "hash",
+  },
   alias: {
     "@": "/src/",
     "@service": "/services/",
