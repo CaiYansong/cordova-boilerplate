@@ -44,5 +44,12 @@
     <preference name="DisallowOverscroll" value="true" />
   </platform>
   <preference name="StatusBarOverlaysWebView" value="false" />
-  <preference name="AndroidInsecureFileModeEnabled" value="true" />
+
+  <!-- 一般设为 http/https，默认 https -->
+  <preference name="scheme" value="http" />
+  <!-- 默认 localhost -->
+  <preference name="hostname" value="localhost" />
+
+  <!-- 开启该设置之后会使用文件协议访问 file:///android_asset/www/ -->
+  <!-- <preference name="AndroidInsecureFileModeEnabled" value="true" /> -->
 </widget>
