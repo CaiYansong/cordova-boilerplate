@@ -44,4 +44,5 @@
     <preference name="DisallowOverscroll" value="true" />
   </platform>
   <preference name="StatusBarOverlaysWebView" value="false" />
+  <preference name="AndroidInsecureFileModeEnabled" value="true" />
 </widget>
