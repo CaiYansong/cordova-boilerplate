@@ -83,6 +83,7 @@ const ip = getLanIp();
       "./public/index.html",
       fs.readFileSync("./public/index-tpl.html", "utf-8")
     );
+    // TODO: 优化
     // 恢复 umi 相关配置
     handleUmirc(false);
 
@@ -96,11 +97,14 @@ const ip = getLanIp();
 })();
 
 function writeLast(opts) {
-  fs.writeJSONSync("./.build.json", opts);
+  fs.writeJSONSync("./.build.json", {
+    ...(fs.readJSONSync("./.build.json") || {}),
+    [mode]: opts,
+  });
 }
 function readLast() {
   if (fs.existsSync("./.build.json")) {
-    return fs.readJSONSync("./.build.json");
+    return fs.readJSONSync("./.build.json")[mode] || {};
   } else {
     return {};
   }
@@ -346,13 +350,11 @@ function handleXML(mode, url = "/") {
 }
 
 /**
-  // TODO: 优化
  * 处理 umi 配置文件
  */
 function handleUmirc(params) {
   const filePath = "./.umirc.ts";
   if (!params) {
-    // 恢复 umi 相关配置
     let umircStr = fs.readFileSync(filePath, "utf-8");
 
     // 添加 https host
@@ -441,6 +443,6 @@ function removeFolder(filePath) {
     });
     fs.rmdirSync(filePath);
   } else {
-    console.log("文件不存在");
+    // console.log("文件不存在");
   }
 }
