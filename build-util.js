@@ -97,8 +97,12 @@ const ip = getLanIp();
 })();
 
 function writeLast(opts) {
+  let data = {};
+  if (fs.existsSync("./.build.json")) {
+    data = fs.readJSONSync("./.build.json") || {};
+  }
   fs.writeJSONSync("./.build.json", {
-    ...(fs.readJSONSync("./.build.json") || {}),
+    ...data,
     [mode]: opts,
   });
 }
@@ -186,8 +190,7 @@ function copyPlatformsHtml(platform) {
   }
 
   if (platform === "browser") {
-    const regexDisableComment =
-      /\s+<!-- 调试模式下 platform===browser 时禁用网页端 CSP -->/;
+    const regexDisableComment = /\s+<!-- 调试模式下 platform===browser 时禁用网页端 CSP -->/;
     const disableCommentIndex = lines.findIndex((line) =>
       line.match(regexDisableComment)
     );
