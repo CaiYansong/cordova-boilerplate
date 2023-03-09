@@ -1,0 +1,79 @@
+.face-detect-wrap {
+  padding: 5vh 2vw;
+  position: relative;
+  .module-loading-wrap {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .module-loading {
+    }
+  }
+  .face-detect-view,
+  .face-detect-video,
+  .face-detect-canvas {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    border-radius: 50%;
+    background-color: #000;
+    overflow: hidden;
+  }
+  .face-detect-video,
+  .face-detect-canvas {
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg); /* Safari 和 Chrome */
+    -moz-transform: rotateY(180deg);
+  }
+  .face-loading {
+    position: absolute;
+    top: -3.5vw;
+    left: -3.5vw;
+    --size: 72vw;
+    background-color: transparent;
+    z-index: 1;
+  }
+  .face-detect-canvas {
+  }
+  .face-detect-tips {
+    padding: 1.6vh 1.6vw;
+    text-align: center;
+    .title {
+      margin-bottom: 1vh;
+      font-size: 7vw;
+      font-weight: 700;
+    }
+    .tip {
+      font-size: 5vw;
+    }
+  }
+  .simple-tip {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    padding: 2vw;
+    text-align: center;
+    font-size: var(--adm-font-size-6);
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  .simple-tip-large {
+    padding: 4vw;
+    text-align: center;
+    font-size: 8vw;
+    font-weight: 700;
+    color: #f00;
+  }
+}
+
+.video-permission-tips {
+  text-align: center;
+  font-size: 5vw;
+  color: #f00;
+}
