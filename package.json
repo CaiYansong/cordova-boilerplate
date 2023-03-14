@@ -8,6 +8,7 @@
     "dev-android": "node build-util.js --serve --androidDevice",
     "start": "node build-util.js --serve",
     "build": "node build-util.js",
+    "release-build": "node build-release.js",
     "dev-build": "umi build",
     "dev-start": "umi dev"
   },
