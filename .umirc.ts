@@ -5,9 +5,11 @@
 import px2vw from "postcss-px-to-viewport-8-plugin";
 
 export default {
-  npmClient: "npm",
   outputPath: "cordova/www",
-  headScripts: [{ src: "cordova.js" }],
+  headScripts: [
+    `if(!this.globalThis){this.globalThis = this;}`,
+    { src: "cordova.js" },
+  ],
   alias: {
     "@": "/src/",
     "@service": "/services/",
