@@ -5,6 +5,7 @@
 import px2vw from "postcss-px-to-viewport-8-plugin";
 
 export default {
+  history: { type: "hash" },
   outputPath: "cordova/www",
   headScripts: [
     `if(!this.globalThis){this.globalThis = this;}`,
